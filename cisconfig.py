@@ -50,7 +50,8 @@ service password-encryption
 exit
 copy running-config startup-config
 """,
-        variables=["motd", "password_min_length", "login_block_for", "login_attempts", "login_time_within", "exec_timeout_mins", "exec_timeout_secs", "console_password", "enable_password"]
+        variables=["motd", "password_min_length", "login_block_for", "login_attempts", "login_time_within", 
+                   "exec_timeout_mins", "exec_timeout_secs", "console_password", "enable_password"]
     ),
     CiscoTemplate(
         name="Router-on-a-Stick (3)",
