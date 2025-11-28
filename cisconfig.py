@@ -9,6 +9,7 @@ from textual.widgets import (
 from textual.containers import Vertical, Horizontal, VerticalScroll
 from textual.reactive import reactive
 import pyperclip
+from textual.theme import Theme
 
 # /* Template System */
 
@@ -24,7 +25,7 @@ class CiscoTemplate:
 TEMPLATES = [
     CiscoTemplate(
         name="Basic Interface",
-        metadata="Basic template forr the template (hah). This metadata field does nothing in the code; use it for notes.",
+        metadata="This metadata field does nothing in the code; use it for notes.",
         config="""
 interface {interface}
 ip address {ip} {subnet}
@@ -50,7 +51,9 @@ service password-encryption
 exit
 copy running-config startup-config
 """,
-        variables=["motd", "password_min_length", "login_block_for", "login_attempts", "login_time_within", "exec_timeout_mins", "exec_timeout_secs", "console_password", "enable_password"]
+        variables=["motd", "password_min_length", "login_block_for", "login_attempts",
+                   "login_time_within", "exec_timeout_mins", "exec_timeout_secs",
+                   "console_password", "enable_password"]
     ),
     CiscoTemplate(
         name="Router-on-a-Stick (3)",
@@ -71,13 +74,12 @@ exit
 interface {interface_type} {interface_number}/0
 no shutdown
 """,
-        variables=["interface_type", "interface_number", "VLAN_number_0", "VLAN_IP_and_subnet_0", "VLAN_number_1", "VLAN_IP_and_subnet_1", "VLAN_number_2", "VLAN_IP_and_subnet_2"]
+        variables=["interface_type", "interface_number", "VLAN_number_0", "VLAN_IP_and_subnet_0", 
+                   "VLAN_number_1", "VLAN_IP_and_subnet_1", "VLAN_number_2", "VLAN_IP_and_subnet_2"]
     ),
 ]
 
 # /* Colour theme */
-
-from textual.theme import Theme
 
 console_theme = Theme(
 name="console",
