@@ -73,6 +73,27 @@ no shutdown
 """,
         variables=["interface_type", "interface_number", "VLAN_number_0", "VLAN_IP_and_subnet_0", "VLAN_number_1", "VLAN_IP_and_subnet_1", "VLAN_number_2", "VLAN_IP_and_subnet_2"]
     ),
+    CiscoTemplate(
+        name="SSH configuration",
+        metadata="",
+        config="""
+int VLAN{VLAN_ID}
+ip address {IP_address} {subnet}
+no sh
+exit
+ip domain-name {domain_name}
+username {username} secret {password}
+crypto key generate rsa {RSA_bits}
+line console 0
+exec-timeout {timeout_mins}
+line vty 0 15
+transport input ssh
+login local
+exec-timeout {timeout_mins}
+exit
+""",
+        variables=["VLAN_ID", "IP_address", "subnet", "domain_name", "username", "password", "RSA_bits", "timeout_mins"]
+    ),
 ]
 
 # /* Colour theme */
@@ -114,11 +135,11 @@ variables={
 class CiscoTemplateApp(App):
     CSS = """
     Screen {
-        padding: 1;
+        padding: 0;
     }
 
     #inputs {
-        padding: 1;
+        padding: 0;
         border: solid gray;
     }
 
@@ -127,7 +148,7 @@ class CiscoTemplateApp(App):
     }
 
     #inputs_scroll {
-        height: 18;
+        height: 19;
         border: solid gray;
         padding: 1;
     }
@@ -182,7 +203,7 @@ class CiscoTemplateApp(App):
             output.text = ""
             return
 
-        template = TEMPLATES[event.value]
+        template = TEMPLATES[event.value] # type: ignore
         self.selected_template = template
         self.values = {var: "" for var in template.variables}
 
@@ -196,7 +217,6 @@ class CiscoTemplateApp(App):
             target.mount(Input(placeholder=var, id=f"input_{var}"))
 
         self.update_output()
-
 
     def on_input_changed(self, event: Input.Changed) -> None:
         if not self.selected_template:
